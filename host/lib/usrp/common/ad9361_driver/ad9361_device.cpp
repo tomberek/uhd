@@ -1552,8 +1552,8 @@ void ad9361_device_t::initialize()
     _use_iq_balance_tracking = true;
     _rx1_agc_mode = GAIN_MODE_SLOW_AGC;
     _rx2_agc_mode = GAIN_MODE_SLOW_AGC;
-    _rx1_agc_enable = false;
-    _rx2_agc_enable = false;
+    _rx1_agc_enable = true;
+    _rx2_agc_enable = true;
     _rx_analog_bw = 0;
     _tx_analog_bw = 0;
     _rx_tia_lp_bw = 0;
@@ -1716,7 +1716,7 @@ void ad9361_device_t::initialize()
 
     _program_mixer_gm_subtable();
     _program_gain_table();
-    _setup_gain_control(false);
+    _setup_gain_control(true);
 
     set_bw_filter(RX, _baseband_bw);
     set_bw_filter(TX, _baseband_bw);
@@ -1856,7 +1856,7 @@ double ad9361_device_t::set_clock_rate(const double req_rate)
 
     _program_mixer_gm_subtable();
     _program_gain_table();
-    _setup_gain_control(false);
+    _setup_gain_control(true);
     _reprogram_gains();
 
     set_bw_filter(RX, _baseband_bw);
@@ -2328,14 +2328,14 @@ void ad9361_device_t::set_agc(chain_t chain, bool enable)
         if(enable) {
             _setup_agc(chain, _rx1_agc_mode);
         } else {
-            _setup_agc(chain, GAIN_MODE_MANUAL);
+            _setup_agc(chain, _rx1_agc_mode);
         }
     } else if (chain == CHAIN_2){
         _rx2_agc_enable = enable;
         if(enable) {
             _setup_agc(chain, _rx2_agc_mode);
         } else {
-            _setup_agc(chain, GAIN_MODE_MANUAL);
+            _setup_agc(chain, _rx2_agc_mode);
         }
     } else
     {
